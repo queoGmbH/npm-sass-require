@@ -11,7 +11,7 @@ module.exports = function(url, prev, cb) {
     }
 
     var resolver = function(url, basePath, cb) {
-        var parts = url.split('/');
+        var parts = url.replace(/^\/?/, '').split('/');
         var res = resolve(parts.shift(), {cwd: basePath})
         if(res === null) {
             throw new Error("module not found")
@@ -22,9 +22,9 @@ module.exports = function(url, prev, cb) {
     var currentDir = path.dirname(prev);
 
     if( url.indexOf('node_modules') >= 0 ) {
-        url = '~/'+url.substr(url.indexOf('node_modules')+('node_modules/'.length))
+        url = '~'+url.substr(url.indexOf('node_modules')+('node_modules/'.length))
     }
-    if( url.indexOf('~/') == 0 ) {
+    if( url.indexOf('~') == 0 ) {
         return resolver(url.substr(2), currentDir, cb)
     }
     cb({file:url});
